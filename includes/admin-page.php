@@ -27,10 +27,30 @@ add_action('admin_init', 'cc_register_settings');
 function cc_display_entries_page() {
     global $wpdb;
     $table_name = $wpdb->prefix . 'custom_contact_form';
-    $results = $wpdb->get_results("SELECT * FROM $table_name");
+    
+    // Récupérer le terme de recherche s'il y en a un
+    $search = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
+
+    // Modifier la requête SQL pour filtrer par nom, email ou message
+    $query = "SELECT * FROM $table_name";
+    if (!empty($search)) {
+        $query .= $wpdb->prepare(" WHERE name LIKE %s OR email LIKE %s OR message LIKE %s", '%'.$search.'%', '%'.$search.'%', '%'.$search.'%');
+    }
+    $results = $wpdb->get_results($query);
     ?>
     <div class="wrap">
         <h1>Entrées du formulaire de contact</h1>
+        
+        <!-- Formulaire de recherche -->
+        <form method="get" action="">
+            <input type="hidden" name="page" value="custom-contact-form" />
+            <input type="text" name="s" value="<?php echo esc_attr($search); ?>" placeholder="Rechercher par nom, email ou message" />
+            <input type="submit" value="Rechercher" class="button" />
+            <?php if (!empty($search)) { ?>
+                <a href="<?php echo admin_url('admin.php?page=custom-contact-form'); ?>" class="button">Réinitialiser</a>
+            <?php } ?>
+        </form>
+        
         <table class="wp-list-table widefat fixed striped">
             <thead>
                 <tr>
@@ -43,21 +63,27 @@ function cc_display_entries_page() {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($results as $row) { ?>
+                <?php if ($results) : ?>
+                    <?php foreach ($results as $row) : ?>
+                        <tr>
+                            <td><?php echo esc_html($row->id); ?></td>
+                            <td><?php echo esc_html($row->name); ?></td>
+                            <td><?php echo esc_html($row->email); ?></td>
+                            <td><?php echo esc_html($row->message); ?></td>
+                            <td><?php echo esc_html($row->created_at); ?></td>
+                            <td>
+                                <a href="<?php echo esc_url(admin_url('admin-post.php?action=cc_delete_entry&id=' . $row->id)); ?>" 
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette entrée?');">
+                                    Supprimer
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else : ?>
                     <tr>
-                        <td><?php echo $row->id; ?></td>
-                        <td><?php echo $row->name; ?></td>
-                        <td><?php echo $row->email; ?></td>
-                        <td><?php echo $row->message; ?></td>
-                        <td><?php echo $row->created_at; ?></td>
-                        <td>
-                            <a href="<?php echo admin_url('admin-post.php?action=cc_delete_entry&id=' . $row->id); ?>" 
-                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette entrée?');">
-                                Supprimer
-                            </a>
-                        </td>
+                        <td colspan="6">Aucune entrée trouvée.</td>
                     </tr>
-                <?php } ?>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
