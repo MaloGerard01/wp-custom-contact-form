@@ -13,6 +13,7 @@ function cc_create_database_table() {
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         name tinytext NOT NULL,
         email varchar(100) NOT NULL,
+        phone VARCHAR(20) NOT NULL,
         message text NOT NULL,
         consent tinyint(1) NOT NULL DEFAULT 1,
         created_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,

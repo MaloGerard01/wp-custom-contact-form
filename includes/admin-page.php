@@ -58,6 +58,7 @@ function cc_display_entries_page() {
                     <th>ID</th>
                     <th>Nom</th>
                     <th>Email</th>
+                    <th>Numéro de téléphone</th>
                     <th>Message</th>
                     <th>Date</th>
                     <th>Actions</th>
@@ -70,6 +71,7 @@ function cc_display_entries_page() {
                             <td><?php echo esc_html($row->id); ?></td>
                             <td><?php echo esc_html($row->name); ?></td>
                             <td><?php echo esc_html($row->email); ?></td>
+                            <td><?php echo esc_html($row->phone); ?></td>
                             <td><?php echo esc_html($row->message); ?></td>
                             <td><?php echo esc_html($row->created_at); ?></td>
                             <td>

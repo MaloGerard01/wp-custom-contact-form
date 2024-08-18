@@ -35,6 +35,10 @@ function cc_form_shortcode() {
             <input type="email" name="cc_email" required>
         </p>
         <p>
+            <label for="cc_phone">Numéro de téléphone</label>
+            <input type="tel" name="cc_phone" maxlength="12" required>
+        </p>
+        <p>
             <label for="cc_message">Message</label>
             <textarea name="cc_message" required></textarea>
         </p>
@@ -92,6 +96,7 @@ function cc_handle_form_submission() {
 
     $name = sanitize_text_field($_POST['cc_name']);
     $email = sanitize_email($_POST['cc_email']);
+    $phone = sanitize_text_field($_POST['cc_phone']);
     $message = sanitize_textarea_field($_POST['cc_message']);
     $consent = isset($_POST['cc_consent']) ? 1 : 0;
 
@@ -99,6 +104,7 @@ function cc_handle_form_submission() {
     $wpdb->insert($table_name, [
         'name' => $name,
         'email' => $email,
+        'phone' => $phone,
         'message' => $message,
         'consent' => $consent,
         'created_at' => current_time('mysql', 1),
