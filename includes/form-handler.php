@@ -20,6 +20,9 @@ add_action('wp_enqueue_scripts', 'cc_enqueue_recaptcha_script');
 
 // Shortcode pour afficher le formulaire de contact
 function cc_form_shortcode() {
+    $privacy_policy_relative_url = get_option('cc_privacy_policy_url', '/cgu');
+    $privacy_policy_url = esc_url(home_url($privacy_policy_relative_url));
+
     ob_start();
     ?>
     <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
@@ -41,7 +44,7 @@ function cc_form_shortcode() {
         </p>
         <p>
             <input type="checkbox" name="cc_consent" required> 
-            <label for="cc_consent">Je consens à ce que mes données soient collectées et utilisées conformément à la <a href="<?php echo esc_url(home_url('/privacy-policy')); ?>" target="_blank">politique de confidentialité</a>.</label>
+            <label for="cc_consent">Je consens à ce que mes données soient collectées et utilisées conformément à la <a href="<?php echo $privacy_policy_url; ?>" target="_blank">politique de confidentialité</a>.</label>
         </p>
         <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
         <p>

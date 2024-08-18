@@ -20,6 +20,7 @@ add_action('admin_menu', 'cc_register_admin_page');
 function cc_register_settings() {
     register_setting('cc_contact_form_settings', 'cc_recaptcha_site_key');
     register_setting('cc_contact_form_settings', 'cc_recaptcha_secret_key');
+    register_setting('cc_contact_form_settings', 'cc_privacy_policy_url');
 }
 add_action('admin_init', 'cc_register_settings');
 
@@ -108,6 +109,10 @@ function cc_display_settings_page() {
                 <tr valign="top">
                     <th scope="row">reCAPTCHA Secret Key</th>
                     <td><input type="text" name="cc_recaptcha_secret_key" value="<?php echo esc_attr(get_option('cc_recaptcha_secret_key')); ?>" /></td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">URL de la politique de confidentialité</th>
+                    <td><input type="text" name="cc_privacy_policy_url" value="<?php echo esc_attr(get_option('cc_privacy_policy_url')); ?>" /></td>
                 </tr>
             </table>
             <?php submit_button(); ?>
