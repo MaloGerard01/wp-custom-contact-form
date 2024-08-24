@@ -110,6 +110,29 @@ function cc_handle_form_submission() {
         'created_at' => current_time('mysql', 1),
     ]);
 
+    // Envoi d'un email à l'administrateur si activé
+    if (get_option('cc_send_to_admin') == 1) {
+        $admin_email = get_option('cc_admin_email');
+        if (!empty($admin_email)) {
+            $admin_subject = 'Nouvelle soumission de formulaire';
+            $admin_message = "Vous avez reçu une nouvelle soumission de formulaire de la part de $name.\n\n";
+            $admin_message .= "Nom: $name\n";
+            $admin_message .= "Email: $email\n";
+            $admin_message .= "Numéro de téléphone: $phone\n";
+            $admin_message .= "Message: $message\n";
+    
+            wp_mail($admin_email, $admin_subject, $admin_message);
+        }
+    }
+
+    // Envoi d'un email de confirmation à l'utilisateur si activé
+    if (get_option('cc_send_to_user') == 1) {
+        $user_subject = 'Confirmation de votre soumission';
+        $user_message = "Merci, $name, de nous avoir contactés. Nous avons bien reçu votre message et reviendrons vers vous dans les plus brefs délais.\n\n";
+
+        wp_mail($email, $user_subject, $user_message);
+    }
+
     // Rediriger après soumission
     wp_redirect(home_url('/'));
     exit;

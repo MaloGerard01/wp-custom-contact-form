@@ -21,6 +21,9 @@ function cc_register_settings() {
     register_setting('cc_contact_form_settings', 'cc_recaptcha_site_key');
     register_setting('cc_contact_form_settings', 'cc_recaptcha_secret_key');
     register_setting('cc_contact_form_settings', 'cc_privacy_policy_url');
+    register_setting('cc_contact_form_settings', 'cc_send_to_admin');
+    register_setting('cc_contact_form_settings', 'cc_admin_email');
+    register_setting('cc_contact_form_settings', 'cc_send_to_user');
 }
 add_action('admin_init', 'cc_register_settings');
 
@@ -115,6 +118,18 @@ function cc_display_settings_page() {
                 <tr valign="top">
                     <th scope="row">URL de la politique de confidentialité</th>
                     <td><input type="text" name="cc_privacy_policy_url" value="<?php echo esc_attr(get_option('cc_privacy_policy_url')); ?>" /></td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Envoyer un email à l'administrateur</th>
+                    <td><input type="checkbox" name="cc_send_to_admin" value="1" <?php checked(get_option('cc_send_to_admin'), 1); ?> /></td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Email de l'administrateur</th>
+                    <td><input type="email" name="cc_admin_email" value="<?php echo esc_attr(get_option('cc_admin_email')); ?>" /></td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Envoyer un email de confirmation à l'utilisateur</th>
+                    <td><input type="checkbox" name="cc_send_to_user" value="1" <?php checked(get_option('cc_send_to_user'), 1); ?> /></td>
                 </tr>
             </table>
             <?php submit_button(); ?>
