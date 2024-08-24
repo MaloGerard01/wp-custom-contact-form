@@ -35,12 +35,27 @@ function cc_display_entries_page() {
     // Récupérer le terme de recherche s'il y en a un
     $search = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
 
+    // Récupérer le numéro de page actuel
+    $paged = isset($_GET['paged']) && is_numeric($_GET['paged']) ? intval($_GET['paged']) : 1;
+    $limit = 25; // Nombre d'entrées par page
+    $offset = ($paged - 1) * $limit;
+
     // Modifier la requête SQL pour filtrer par nom, email ou message
     $query = "SELECT * FROM $table_name";
     if (!empty($search)) {
         $query .= $wpdb->prepare(" WHERE name LIKE %s OR email LIKE %s OR message LIKE %s", '%'.$search.'%', '%'.$search.'%', '%'.$search.'%');
     }
+    $query .= " LIMIT $offset, $limit";
     $results = $wpdb->get_results($query);
+
+    // Obtenir le nombre total d'entrées pour la pagination
+    $total_query = "SELECT COUNT(*) FROM $table_name";
+    if (!empty($search)) {
+        $total_query .= $wpdb->prepare(" WHERE name LIKE %s OR email LIKE %s OR message LIKE %s", '%'.$search.'%', '%'.$search.'%', '%'.$search.'%');
+    }
+    $total_items = $wpdb->get_var($total_query);
+    $total_pages = ceil($total_items / $limit);
+    
     ?>
     <div class="wrap">
         <h1>Entrées du formulaire de contact</h1>
@@ -87,11 +102,31 @@ function cc_display_entries_page() {
                     <?php endforeach; ?>
                 <?php else : ?>
                     <tr>
-                        <td colspan="6">Aucune entrée trouvée.</td>
+                        <td colspan="7">Aucune entrée trouvée.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
         </table>
+        
+        <!-- Pagination -->
+        <?php if ($total_pages > 1) : ?>
+            <div class="tablenav">
+                <div class="tablenav-pages">
+                    <?php
+                    $pagination_args = array(
+                        'base' => add_query_arg('paged', '%#%'),
+                        'format' => '',
+                        'total' => $total_pages,
+                        'current' => $paged,
+                        'prev_text' => __('&laquo; Précédent'),
+                        'next_text' => __('Suivant &raquo;'),
+                    );
+
+                    echo paginate_links($pagination_args);
+                    ?>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
     <?php
 }
