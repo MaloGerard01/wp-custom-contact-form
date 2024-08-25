@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Custom Contact Form
-Description: A custom contact form plugin.
+Description: Formulaire de contact personnalisé.
 Version: 1.0
 Author: Malo Gérard
 */

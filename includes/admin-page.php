@@ -16,7 +16,7 @@ function cc_register_admin_page() {
 }
 add_action('admin_menu', 'cc_register_admin_page');
 
-// Enregistrer les paramètres reCAPTCHA
+// Enregistrer les paramètres
 function cc_register_settings() {
     register_setting('cc_contact_form_settings', 'cc_recaptcha_site_key');
     register_setting('cc_contact_form_settings', 'cc_recaptcha_secret_key');
@@ -131,7 +131,7 @@ function cc_display_entries_page() {
     <?php
 }
 
-// Fonction pour afficher la page de paramètres reCAPTCHA
+// Fonction pour afficher la page de paramètres
 function cc_display_settings_page() {
     ?>
     <div class="wrap">

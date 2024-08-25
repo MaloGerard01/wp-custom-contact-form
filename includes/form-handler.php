@@ -82,7 +82,7 @@ function cc_handle_form_submission() {
     $response_body = wp_remote_retrieve_body($response);
     $result = json_decode($response_body);
 
-    if (!$result->success || $result->score < 0.5) { // Le seuil peut être ajusté
+    if (!$result->success || $result->score < 0.5) {
         wp_die('reCAPTCHA vérification échouée. Votre score: ' . $result->score);
     }
 
